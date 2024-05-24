@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    integrity="sha512-ExzXU86Ofp0KQLeLHznOQoWITWDyGbN2/R2m2P4wD4UMwfjwJ7FQVVPn3+8xVX+JH7CBbiDWG4N3sINyyU5e4A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+
+<body>
+  <div class="header">
+    <div class="carticon" onclick="ToCart()">
+      <i class="fas fa-shopping-cart"></i>
+      <div class="cart-item-num" id="item-num" style="text-align: center; ">0</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <form action="#" method="post">
+              <div class="form">
+                <label>Product-Name:-</label>
+                <input type="text" id="name" class="form-data">
+                <p id="error"></p>
+              </div>
+              <div class="form">
+                <label>Price:-</label>
+                <input type="text" id="price" class="form-data">
+              </div>
+              <div class="form">
+                <label>Colour:-</label>
+                <input type="text" id="color" class="form-data">
+              </div>
+              <div class="btn-card">
+                <button onclick="addProduct()" class="shattered-glass-button">Add Product</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12" style="margin-right: 21px;">
+        <div class="row" id="cdcontainer">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/jquery-3.6.0.min.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script>
+    let arr = JSON.parse(localStorage.getItem("product")) || [];
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    function addProduct() {
+      let name = document.getElementById("name").value;
+      let price = document.getElementById("price").value;
+      let color = document.getElementById("color").value;
+
+      if (name === "" && price === "" && color === "") {
+        document.getElementById("error").innerHTML = "Enter All The Details Below";
+        error.style.color = "red";
+      }
+
+      let data = {
+        name,
+        price,
+        color
+      };
+
+      arr.push(data);
+      localStorage.setItem("product", JSON.stringify(arr));
+      location.reload();
+    }
+
+    function ToCart() {
+      window.location.href = "shopping-cart.html";
+    }
+
+    function ProductData() {
+      let cdcontainer = document.getElementById("cdcontainer");
+
+      arr.map((val, index) => {
+        let card = document.createElement("div");
+        card.style = "width:18rem";
+
+        let cardCol = document.createElement("div");
+        card.style = "col-lg-8";
+
+        card.innerHTML = `
+                    <div class="card col-lg-4" style="width: 349px; padding-bottom:-1px; padding-left: -1px; padding-right:6px; margin-left: -67px;  margin-top: 45px; margin-bottom: 30px; border-radius: 30px;">
+                        <img src="images/iphone15pink1.png." class="card-image" alt="P-Image"  style="width: 181px; margin: 0 auto; margin-top:16px; margin-bottom: 10px; border: 2px solid #000;">
+                        <div class="card-body" style="width: 350px;">
+                            
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" style="font-size:18px;padding-left: 15px; padding-bottom:10px;">Product-Name:- ${val.name}</li>
+                                <li class="list-group-item" style="border-bottom:none; font-size:18px; padding-bottom: 0; padding-top: 0" >Price:- ${val.price}</li>
+                                <li class="list-group-item" style="font-size:20px; padding-bottom:15px;">Color:- ${val.color}</li>
+                            </ul>
+                            
+                            <div class="d-flex justify-content-between"> 
+                                <button class="btn btn-primary btn-sm mr-2" onclick="add(${index})" style="padding-top:3px; padding-bottom: 5px; padding-right: 21px; padding-left:14px; margin-top:14px; ">ADD</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteProduct(${index})" style="padding-top:3px; padding-bottom: 5px; padding-right: 21px; padding-left:14px; margin-top:14px;">DELETE</button>
+                                <button type="button" class="btn btn-success"  onclick="viewdata(${index})" style="padding-top:3px; padding-bottom: 5px; padding-right: 21px; padding-left:14px; margin-top:14px;">UPDATE</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+        cardCol.appendChild(card);
+        cdcontainer.appendChild(cardCol);
+      });
+    }
+    ProductData();
+
+
+    function add(index) {
+      let additem = arr[index];
+      cart.push(additem);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(" Your Item Added Successfully:)!");
+      updateCart();
+    }
+
+    function updateCart() {
+      let counter = document.getElementById("item-num");
+      let items = JSON.parse(localStorage.getItem("cart")) || [];
+      counter.textContent = items.length;
+    }
+
+    updateCart();
+
+    function deleteProduct(index) {
+      arr.splice(index, 1);
+      localStorage.setItem("product", JSON.stringify(arr));
+      location.reload();
+    }
+
+    function viewdata(index) {
+      let data = arr[index];
+      let modalId = `exampleModal${index}`;
+
+      arr.map((val, index) => {
+        let edit = document.createElement("div");
+        edit.innerHTML = `
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" style="position: absolute; top: 0; right: 0;">Update Changes Here =></button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Update Changes</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="product-name" class="col-form-label">Product-Name:-</label>
+            <input type="text" class="form-control" id="newName">
+          </div>
+          <div class="mb-3">
+            <label for="price" class="col-form-label">price:-</label>
+            <input type="text" class="form-control" id="newPrice"></input>
+          </div>
+          <div class="mb-3">
+            <label for="color" class="col-form-label">color:-</label>
+            <input type="text" class="form-control" id="newColor"></input>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="update(${index})">Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+                `;
+        document.body.appendChild(edit);
+        $(`#${modalId}`).modal('show');
+
+        alert("Update button is there in right upper corner!");
+      });
+    };
+
+    function update(index) {
+      let newName = document.getElementById("newName").value;
+      let newPrice = document.getElementById("newPrice").value;
+      let newColor = document.getElementById("newColor").value;
+
+
+      let data = {
+        name: newName,
+        price: newPrice,
+        color: newColor
+      };
+
+      arr.splice(index, 1, data)
+      localStorage.setItem("product", JSON.stringify(arr));
+      location.reload();
+    }
+  </script>
+
+
+
+
+
+</body>
+
+</html>

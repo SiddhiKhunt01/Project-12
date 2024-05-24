@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/cart.css">
+</head>
+<body>
+    <div class="cursor cursor-follower"></div>
+    <div class="cursor cursor-dot"></div>
+
+    <h1>YOUR PRODUCT HAS BEEN SAVED HERE SUCCESSFULLY!!:)</h1>
+
+    
+    <script src="js/jquery-3.7.1.min.js"></script>
+    <script>
+        $(window).mousemove(function(event) { 
+  
+    $('.cursor').css({
+    left: event.pageX,
+    top: event.pageY
+  })
+  
+})
+
+$('h1')
+.on('mouseenter', function() {
+  $('.cursor').addClass('focus')
+})
+.on('mouseleave', function() {  
+  $('.cursor').removeClass('focus')
+})
+    </script>
+</body>
+</html>
